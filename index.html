@@ -55,6 +55,7 @@
       .pill { font-size: .8rem; border-radius: 999px; padding: 4px 8px; background: #fff2e6; color: #7a3f16; }
       .hero h1 { margin: 0; font-size: clamp(1.6rem, 3.8vw, 2.7rem); }
       input, select, textarea { width: 100%; border: 1px solid #e6c7a7; border-radius: 10px; padding: 10px; font: inherit; }
+      button, input, select, textarea, .btn { min-height: 42px; }
       .filters { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
       .menu-item, .order-item, .simple-box { border: 1px solid #f2d9c2; border-radius: 10px; background: #fffdfa; padding: 10px; }
       .cart-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; border: 1px solid #f2d9c2; border-radius: 10px; padding: 8px; }
@@ -67,9 +68,47 @@
       .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
       .tabs button { background: var(--soft); color: #7a3f16; }
       .tabs button.active { background: var(--brand); color: #fff; }
+      .mobile-cart-bar {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 58px;
+        width: min(760px, 94vw);
+        background: #2b1d14;
+        color: #fff;
+        border-radius: 999px;
+        padding: 8px 10px;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        z-index: 45;
+      }
+      .mobile-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 46;
+        display: none;
+        background: rgba(255, 248, 241, 0.96);
+        border-top: 1px solid #f3d7b8;
+        padding: 8px max(8px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+      }
+      .mobile-nav a {
+        text-decoration: none;
+        color: #7a3f16;
+        font-weight: 700;
+        font-size: .9rem;
+      }
+      .mobile-nav .row { justify-content: space-around; }
+      .quick-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; margin-top: 8px; }
+      .quick-chips button { white-space: nowrap; background: #fff2e6; color: #7a3f16; }
       @media (max-width: 980px) {
         .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
         .filters { grid-template-columns: 1fr; }
+        .mobile-cart-bar, .mobile-nav { display: flex; }
+        body { padding-bottom: 120px; }
       }
     </style>
     <script type="application/ld+json">
@@ -129,6 +168,7 @@
               <input id="searchInput" placeholder="Search dish..." />
               <select id="categoryFilter"><option value="all">All categories</option></select>
             </div>
+            <div class="quick-chips" id="quickChips"></div>
             <div id="menuGrid" class="grid-3" style="margin-top:10px"></div>
           </article>
         </section>
@@ -229,6 +269,14 @@
                 <button data-tab="discounts" type="button">Discounts</button>
                 <button data-tab="settings" type="button">Settings</button>
               </div>
+              <label class="hidden" id="adminTabSelectWrap">Admin section
+                <select id="adminTabSelect">
+                  <option value="ops">Operations</option>
+                  <option value="menu">Menu</option>
+                  <option value="discounts">Discounts</option>
+                  <option value="settings">Settings</option>
+                </select>
+              </label>
 
               <div id="tabOps" class="grid-2">
                 <article class="simple-box">
@@ -302,6 +350,19 @@
       </div>
     </main>
 
+    <div class="mobile-cart-bar" id="mobileCartBar">
+      <span id="mobileCartText">0 items · $0.00</span>
+      <a class="btn btn-primary" href="#orderForm">Checkout</a>
+    </div>
+    <nav class="mobile-nav">
+      <div class="row" style="width:100%">
+        <a href="#menuSection">Menu</a>
+        <a href="#orderForm">Checkout</a>
+        <a href="#qrSection">QR</a>
+        <a href="#reservationForm">Reserve</a>
+      </div>
+    </nav>
+
     <script>
       const DEFAULT_MENU = [
         { id: 1, name: "Paneer Tikka", category: "Starters", price: 9.99, desc: "Char-grilled paneer with mint chutney." },
@@ -370,6 +431,7 @@
           $(`tab${name[0].toUpperCase()}${name.slice(1)}`).classList.toggle("hidden", name !== tabName);
           document.querySelector(`[data-tab='${name}']`).classList.toggle("active", name === tabName);
         });
+        if ($("adminTabSelect")) $("adminTabSelect").value = tabName;
       }
 
       function buildCategories() {
@@ -379,6 +441,33 @@
           o.value = cat;
           o.textContent = cat;
           $("categoryFilter").append(o);
+        });
+        renderQuickChips();
+      }
+
+      function renderQuickChips() {
+        $("quickChips").innerHTML = "";
+        const all = document.createElement("button");
+        all.type = "button";
+        all.textContent = "All";
+        all.className = "btn";
+        all.dataset.category = "all";
+        $("quickChips").append(all);
+
+        [...new Set(menu.map((x) => x.category))].forEach((cat) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.textContent = cat;
+          b.className = "btn";
+          b.dataset.category = cat;
+          $("quickChips").append(b);
+        });
+
+        $("quickChips").querySelectorAll("button[data-category]").forEach((b) => {
+          b.addEventListener("click", () => {
+            $("categoryFilter").value = b.dataset.category;
+            renderMenu();
+          });
         });
       }
 
@@ -440,6 +529,7 @@
           $("cartCount").textContent = "0 items";
           $("orderBtn").disabled = true;
           ["subTotal","discountLine","taxLine","serviceLine","grandLine","payableTotal"].forEach((id) => $(id).textContent = money(0));
+          $("mobileCartText").textContent = `0 items · ${money(0)}`;
           return;
         }
 
@@ -480,6 +570,7 @@
         $("serviceLine").textContent = money(service);
         $("grandLine").textContent = money(grand);
         $("payableTotal").textContent = money(grand);
+        $("mobileCartText").textContent = `${qtyTotal} item${qtyTotal > 1 ? "s" : ""} · ${money(grand)}`;
         $("orderBtn").disabled = false;
       }
 
@@ -595,6 +686,7 @@
       $("orderTypeSelect").addEventListener("change", updateOrderLocationLabel);
 
       document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
+      $("adminTabSelect").addEventListener("change", () => setTab($("adminTabSelect").value));
 
       $("applyCouponBtn").addEventListener("click", () => {
         $("couponStatus").className = "status";
@@ -819,6 +911,7 @@
 
       setView("customer");
       setTab("ops");
+      if (window.matchMedia("(max-width: 980px)").matches) $("adminTabSelectWrap").classList.remove("hidden");
       applySettingsToUI();
       buildCategories();
       renderMenu();
