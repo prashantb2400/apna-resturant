@@ -3,520 +3,243 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apna Restaurant | Complete Customer + Admin App</title>
-    <meta name="description" content="Comprehensive restaurant app: dine-in digital menu, online ordering, reservations, QR menu, coupons, and local admin operations." />
-    <meta name="robots" content="index,follow" />
+    <title>Apna Restaurant | Simple Digital Menu</title>
+    <meta name="description" content="Simple and user-friendly restaurant app with INR pricing, quick order flow, and QR menu." />
     <style>
       :root {
-        --bg: #fff8f1;
-        --surface: #ffffff;
-        --brand: #d9480f;
-        --brand-dark: #a93a10;
-        --muted: #6f5a4d;
+        --bg: #fff9f2;
+        --card: #fff;
+        --brand: #e8590c;
+        --brand-dark: #c9470b;
+        --muted: #6b5a4d;
         --text: #2b1d14;
-        --soft: #fff2e6;
-        --ok: #2f9e44;
-        --warn: #f08c00;
-        --danger: #c92a2a;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: linear-gradient(180deg, #fff9f2 0%, #ffe8cc 100%);
         color: var(--text);
-        background: linear-gradient(180deg, #fff8f1 0%, #ffe8cc 100%);
       }
-      .container { width: min(1160px, 92vw); margin: 0 auto; }
-      .top-note { text-align: center; padding: 8px; background: #fff1de; border-bottom: 1px solid #f3d7b8; color: #7a3f16; font-weight: 600; }
+      .container { width: min(980px, 92vw); margin: 0 auto; }
       header {
-        position: sticky; top: 0; z-index: 50;
-        background: rgba(255,248,241,.9); backdrop-filter: blur(6px);
+        position: sticky; top: 0; z-index: 10;
+        background: rgba(255, 249, 242, 0.93);
         border-bottom: 1px solid #f3d7b8;
+        backdrop-filter: blur(4px);
       }
-      .nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
-      .brand-badge { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--brand); }
-      .switch { display: inline-flex; gap: 6px; border: 1px solid #ffd8a8; background: #fff2e6; border-radius: 999px; padding: 4px; }
-      .switch button { border: 0; border-radius: 999px; padding: 8px 12px; background: transparent; font-weight: 700; color: #7a3f16; cursor: pointer; }
-      .switch .active { background: var(--brand); color: #fff; }
-      .card { background: var(--surface); border-radius: 14px; padding: 16px; box-shadow: 0 8px 22px rgba(0,0,0,.08); }
-      .hidden { display: none !important; }
-      .btn, button { border: 0; border-radius: 999px; padding: 9px 14px; font-weight: 700; cursor: pointer; }
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+      }
+      .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+      .brand-badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--brand); }
+      .card {
+        background: var(--card);
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0,0,0,.08);
+        padding: 14px;
+      }
+      .hero { margin-top: 14px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; }
+      .hero h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 2rem); }
+      .muted { color: var(--muted); }
+      .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+      .chip { background: #fff2e6; color: #7a3f16; border-radius: 999px; padding: 6px 10px; font-size: .9rem; }
+      .section { margin-top: 12px; }
+      .search-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+      .chips-scroll { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 2px; }
+      .chips-scroll button { border: 0; border-radius: 999px; background: #fff2e6; color: #7a3f16; padding: 8px 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+      input, select, textarea { width: 100%; border: 1px solid #e6c7a7; border-radius: 10px; padding: 10px; font: inherit; min-height: 42px; }
+      .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+      .menu-item { border: 1px solid #f2d9c2; border-radius: 10px; background: #fffdfa; padding: 10px; display: grid; gap: 8px; }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      .btn { border: 0; border-radius: 999px; padding: 9px 12px; font-weight: 700; cursor: pointer; }
       .btn-primary { background: var(--brand); color: #fff; }
       .btn-primary:hover { background: var(--brand-dark); }
-      .btn-soft { background: var(--soft); color: #7a3f16; }
-      .btn-danger { background: #ffe3e3; color: #a51111; }
-      section { padding: 12px 0; }
-      .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-      .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-      .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .muted { color: var(--muted); }
-      .pill { font-size: .8rem; border-radius: 999px; padding: 4px 8px; background: #fff2e6; color: #7a3f16; }
-      .hero h1 { margin: 0; font-size: clamp(1.6rem, 3.8vw, 2.7rem); }
-      input, select, textarea { width: 100%; border: 1px solid #e6c7a7; border-radius: 10px; padding: 10px; font: inherit; }
-      button, input, select, textarea, .btn { min-height: 42px; }
-      .filters { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-      .menu-item, .order-item, .simple-box { border: 1px solid #f2d9c2; border-radius: 10px; background: #fffdfa; padding: 10px; }
-      .cart-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; border: 1px solid #f2d9c2; border-radius: 10px; padding: 8px; }
-      .tiny { width: 30px; height: 30px; border-radius: 8px; padding: 0; background: #ffe8cc; }
-      .kpi { background: #fff8f1; border: 1px solid #f3d7b8; border-radius: 10px; padding: 10px; }
-      .status { min-height: 1.2rem; font-weight: 700; }
-      .ok { color: var(--ok); }
-      .error { color: var(--danger); }
-      .warn { color: var(--warn); }
-      .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-      .tabs button { background: var(--soft); color: #7a3f16; }
-      .tabs button.active { background: var(--brand); color: #fff; }
-      .mobile-cart-bar {
-        position: fixed;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 58px;
-        width: min(760px, 94vw);
-        background: #2b1d14;
-        color: #fff;
-        border-radius: 999px;
-        padding: 8px 10px;
-        display: none;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        z-index: 45;
+      .btn-soft { background: #fff2e6; color: #7a3f16; }
+      .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+      .cart-list { display: grid; gap: 8px; }
+      .cart-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; border: 1px solid #f2d9c2; border-radius: 10px; padding: 8px; }
+      .tiny { width: 30px; height: 30px; border: 0; border-radius: 8px; background: #ffe8cc; cursor: pointer; }
+      .status { min-height: 1.2rem; font-weight: 700; margin-top: 4px; }
+      .ok { color: #2f9e44; }
+      .error { color: #c92a2a; }
+      .mobile-bar {
+        position: fixed; left: 50%; transform: translateX(-50%); bottom: 10px; width: min(760px, 92vw);
+        background: #2b1d14; color: #fff; border-radius: 999px; padding: 8px 10px;
+        display: none; justify-content: space-between; align-items: center; z-index: 20;
       }
-      .mobile-nav {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 46;
-        display: none;
-        background: rgba(255, 248, 241, 0.96);
-        border-top: 1px solid #f3d7b8;
-        padding: 8px max(8px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
-      }
-      .mobile-nav a {
-        text-decoration: none;
-        color: #7a3f16;
-        font-weight: 700;
-        font-size: .9rem;
-      }
-      .mobile-nav .row { justify-content: space-around; }
-      .quick-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; margin-top: 8px; }
-      .quick-chips button { white-space: nowrap; background: #fff2e6; color: #7a3f16; }
-      @media (max-width: 980px) {
-        .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-        .filters { grid-template-columns: 1fr; }
-        .mobile-cart-bar, .mobile-nav { display: flex; }
-        body { padding-bottom: 120px; }
+      @media (max-width: 860px) {
+        .hero, .layout { grid-template-columns: 1fr; }
+        .menu-grid { grid-template-columns: 1fr; }
+        .mobile-bar { display: flex; }
+        body { padding-bottom: 74px; }
       }
     </style>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "name": "Apna Restaurant",
-        "telephone": "+1-555-019-2026",
-        "servesCuisine": ["Indian"],
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "245 Main Street",
-          "addressLocality": "Downtown",
-          "addressRegion": "NY",
-          "postalCode": "10001"
-        }
-      }
-    </script>
   </head>
   <body>
-    <div class="top-note">Comprehensive setup: Menu + Cart + Coupons + Orders + Reservations + Admin operations.</div>
     <header>
       <div class="container nav">
         <div class="brand"><span class="brand-badge">🍽️</span>Apna Restaurant</div>
-        <div class="switch">
-          <button id="customerBtn" class="active" type="button">Customer</button>
-          <button id="adminBtn" type="button">Admin</button>
-        </div>
+        <a class="btn btn-soft" href="#orderSection">Quick Order</a>
       </div>
     </header>
 
     <main class="container">
-      <div id="customerView">
-        <section class="hero">
-          <article class="card grid-2">
-            <div>
-              <h1>Digital dining + online ordering in one place</h1>
-              <p class="muted">Guests can browse the menu, apply coupons, place dine-in/pickup/delivery orders, and book tables.</p>
-              <div class="row" style="justify-content:flex-start; gap:8px">
-                <a class="btn btn-primary" href="#menuSection">Browse menu</a>
-                <a class="btn btn-soft" href="#qrSection">Get QR menu</a>
-              </div>
-            </div>
-            <div class="grid-2">
-              <div class="kpi"><strong>Kitchen</strong><div class="muted" id="kitchenHours">11:00 AM - 11:00 PM</div></div>
-              <div class="kpi"><strong>Delivery radius</strong><div class="muted" id="radiusInfo">8 km</div></div>
-              <div class="kpi"><strong>Support</strong><div class="muted" id="supportInfo">+1 (555) 019-2026</div></div>
-              <div class="kpi"><strong>Address</strong><div class="muted" id="addressInfo">245 Main Street, Downtown, NY 10001</div></div>
-            </div>
-          </article>
-        </section>
+      <section class="hero">
+        <article class="card">
+          <h1>Simple menu and fast ordering</h1>
+          <p class="muted">Choose food, pick time, place order. That’s it.</p>
+          <div class="chip-row">
+            <span class="chip">⏰ Open: 11:00 AM - 11:00 PM</span>
+            <span class="chip">🚚 Delivery in 30-40 min</span>
+            <span class="chip">📞 +91 98765 43210</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3 style="margin-top:0">Scan QR for Menu</h3>
+          <label>Menu URL<input id="qrUrlInput" type="url" /></label>
+          <div class="row" style="margin-top:8px">
+            <button id="generateQrBtn" class="btn btn-soft" type="button">Generate QR</button>
+            <a id="openMenuLink" class="btn btn-primary" href="#menuSection">Open Menu</a>
+          </div>
+          <div style="text-align:center;margin-top:8px">
+            <img id="menuQr" width="150" height="150" alt="Menu QR" style="border:1px solid #f2d9c2;border-radius:10px;background:#fff" />
+          </div>
+        </article>
+      </section>
 
-        <section id="menuSection">
-          <article class="card">
-            <div class="row"><h2 style="margin:0">Digital Menu</h2><span id="cartCount" class="pill">0 items</span></div>
-            <div class="filters">
-              <input id="searchInput" placeholder="Search dish..." />
-              <select id="categoryFilter"><option value="all">All categories</option></select>
-            </div>
-            <div class="quick-chips" id="quickChips"></div>
-            <div id="menuGrid" class="grid-3" style="margin-top:10px"></div>
-          </article>
-        </section>
+      <section id="menuSection" class="section card">
+        <div class="row"><h2 style="margin:0">Menu</h2><span id="itemCount" class="chip">0 items</span></div>
+        <div class="search-row">
+          <input id="searchInput" placeholder="Search food (paneer, biryani...)" />
+          <select id="categoryFilter"><option value="all">All</option></select>
+        </div>
+        <div id="quickChips" class="chips-scroll"></div>
+        <div id="menuGrid" class="menu-grid"></div>
+      </section>
 
-        <section class="grid-2">
-          <article class="card">
-            <div class="row"><h2 style="margin:0">Cart & billing</h2><strong id="payableTotal">$0.00</strong></div>
-            <div id="cartList" style="display:grid;gap:8px;margin-top:8px"></div>
-            <div style="display:grid;gap:8px;margin-top:8px">
-              <label>Coupon code
-                <div class="row" style="gap:6px">
-                  <input id="couponInput" placeholder="WELCOME10" />
-                  <button id="applyCouponBtn" class="btn btn-soft" type="button">Apply</button>
-                  <button id="clearCouponBtn" class="btn btn-soft" type="button">Clear</button>
-                </div>
-              </label>
-              <div class="row"><span class="muted">Subtotal</span><span id="subTotal">$0.00</span></div>
-              <div class="row"><span class="muted">Discount</span><span id="discountLine">-$0.00</span></div>
-              <div class="row"><span class="muted">Tax (8%)</span><span id="taxLine">$0.00</span></div>
-              <div class="row"><span class="muted">Service fee</span><span id="serviceLine">$0.00</span></div>
-              <div class="row"><strong>Total payable</strong><strong id="grandLine">$0.00</strong></div>
-              <div id="couponStatus" class="status"></div>
-            </div>
-          </article>
+      <section class="layout">
+        <article class="card">
+          <div class="row"><h2 style="margin:0">Cart</h2><strong id="grandTotal">₹0</strong></div>
+          <div id="cartList" class="cart-list" style="margin-top:8px"></div>
+          <div style="display:grid;gap:6px;margin-top:8px">
+            <div class="row"><span class="muted">Subtotal</span><span id="subTotal">₹0</span></div>
+            <div class="row"><span class="muted">GST (5%)</span><span id="taxTotal">₹0</span></div>
+            <div class="row"><strong>Total</strong><strong id="finalTotal">₹0</strong></div>
+          </div>
+        </article>
 
-          <article class="card">
-            <h2 style="margin-top:0">Place order</h2>
-            <form id="orderForm" style="display:grid;gap:10px">
-              <label>Order type
-                <select name="orderType" id="orderTypeSelect" required>
-                  <option value="dine_in">Dine-In</option>
-                  <option value="pickup">Pickup</option>
-                  <option value="delivery">Delivery</option>
-                </select>
-              </label>
-              <label>Name<input name="name" required /></label>
-              <label>Phone<input name="phone" required /></label>
-              <label id="locationLabel">Table Number<input id="locationInput" name="locationDetail" required placeholder="Table 6" /></label>
-              <label>Notes<textarea name="notes" rows="3"></textarea></label>
-              <button id="orderBtn" class="btn btn-primary" type="submit" disabled>Submit order</button>
-              <div id="orderStatus" class="status"></div>
-            </form>
-          </article>
-        </section>
-
-        <section class="grid-2">
-          <article id="qrSection" class="card">
-            <h2 style="margin-top:0">QR Menu</h2>
-            <label>Menu URL<input id="qrUrlInput" type="url" /></label>
-            <div class="row" style="margin-top:8px">
-              <button id="generateQrBtn" class="btn btn-soft" type="button">Generate QR</button>
-              <a id="openMenuLink" class="btn btn-primary" href="#menuSection">Open Menu Link</a>
-            </div>
-            <div style="margin-top:10px;text-align:center">
-              <img id="menuQr" alt="QR menu" width="180" height="180" style="border:1px solid #f2d9c2;border-radius:10px;background:#fff" />
-            </div>
-          </article>
-
-          <article class="card">
-            <h2 style="margin-top:0">Reserve a table</h2>
-            <form id="reservationForm" style="display:grid;gap:10px">
-              <input name="name" required placeholder="Guest name" />
-              <input name="phone" required placeholder="Phone number" />
-              <input name="date" type="date" required />
-              <input name="time" type="time" required />
-              <input name="guests" type="number" min="1" required placeholder="Guests" />
-              <button class="btn btn-primary" type="submit">Book table</button>
-              <div id="reservationStatus" class="status"></div>
-            </form>
-          </article>
-        </section>
-      </div>
-
-      <div id="adminView" class="hidden">
-        <section>
-          <article class="card">
-            <div class="row">
-              <h2 style="margin:0">Admin Console</h2>
-              <span class="pill">Passcode protected (demo)</span>
-            </div>
-            <div id="adminGate">
-              <label>Passcode<input id="adminPassInput" type="password" placeholder="admin123" /></label>
-              <button id="unlockAdminBtn" class="btn btn-primary" type="button" style="margin-top:8px">Unlock</button>
-              <div id="adminStatus" class="status"></div>
-            </div>
-
-            <div id="adminContent" class="hidden" style="margin-top:10px">
-              <div class="grid-4" id="metricsGrid">
-                <div class="kpi"><strong>Total orders</strong><div id="metricOrders">0</div></div>
-                <div class="kpi"><strong>Revenue</strong><div id="metricRevenue">$0.00</div></div>
-                <div class="kpi"><strong>Reservations</strong><div id="metricReservations">0</div></div>
-                <div class="kpi"><strong>Menu items</strong><div id="metricMenu">0</div></div>
-              </div>
-
-              <div class="tabs" style="margin:10px 0">
-                <button data-tab="ops" class="active" type="button">Operations</button>
-                <button data-tab="menu" type="button">Menu</button>
-                <button data-tab="discounts" type="button">Discounts</button>
-                <button data-tab="settings" type="button">Settings</button>
-              </div>
-              <label class="hidden" id="adminTabSelectWrap">Admin section
-                <select id="adminTabSelect">
-                  <option value="ops">Operations</option>
-                  <option value="menu">Menu</option>
-                  <option value="discounts">Discounts</option>
-                  <option value="settings">Settings</option>
-                </select>
-              </label>
-
-              <div id="tabOps" class="grid-2">
-                <article class="simple-box">
-                  <div class="row"><h3 style="margin:0">Orders</h3><button id="clearOrdersBtn" class="btn btn-soft" type="button">Clear orders</button></div>
-                  <div id="ordersList" style="display:grid;gap:8px;margin-top:8px"></div>
-                </article>
-                <article class="simple-box">
-                  <div class="row"><h3 style="margin:0">Reservations</h3><button id="clearReservationsBtn" class="btn btn-soft" type="button">Clear reservations</button></div>
-                  <div id="reservationList" style="display:grid;gap:8px;margin-top:8px"></div>
-                </article>
-              </div>
-
-              <div id="tabMenu" class="grid-2 hidden">
-                <article class="simple-box">
-                  <h3 style="margin-top:0">Add menu item</h3>
-                  <form id="menuItemForm" style="display:grid;gap:8px">
-                    <input name="name" required placeholder="Dish name" />
-                    <input name="category" required placeholder="Category" />
-                    <input name="price" type="number" min="0" step="0.01" required placeholder="Price" />
-                    <textarea name="desc" rows="2" placeholder="Description"></textarea>
-                    <button class="btn btn-primary" type="submit">Save item</button>
-                  </form>
-                </article>
-                <article class="simple-box">
-                  <div class="row"><h3 style="margin:0">Current menu</h3><button id="resetMenuBtn" class="btn btn-danger" type="button">Reset menu</button></div>
-                  <div id="menuList" style="display:grid;gap:8px;margin-top:8px"></div>
-                </article>
-              </div>
-
-              <div id="tabDiscounts" class="grid-2 hidden">
-                <article class="simple-box">
-                  <h3 style="margin-top:0">Discount engine</h3>
-                  <form id="couponForm" style="display:grid;gap:8px">
-                    <input name="code" required placeholder="Coupon code" />
-                    <select name="type" required>
-                      <option value="percent">Percent (%)</option>
-                      <option value="flat">Flat ($)</option>
-                    </select>
-                    <input name="value" type="number" min="0" step="0.01" required placeholder="Value" />
-                    <input name="minOrder" type="number" min="0" step="0.01" placeholder="Min order (optional)" />
-                    <button class="btn btn-primary" type="submit">Save coupon</button>
-                  </form>
-                </article>
-                <article class="simple-box">
-                  <div class="row"><h3 style="margin:0">Coupons</h3><button id="clearCouponsBtn" class="btn btn-soft" type="button">Clear coupons</button></div>
-                  <div id="couponList" style="display:grid;gap:8px;margin-top:8px"></div>
-                </article>
-              </div>
-
-              <div id="tabSettings" class="grid-2 hidden">
-                <article class="simple-box">
-                  <h3 style="margin-top:0">Restaurant settings</h3>
-                  <form id="settingsForm" style="display:grid;gap:8px">
-                    <input name="name" required placeholder="Restaurant name" />
-                    <input name="hours" required placeholder="Kitchen hours" />
-                    <input name="radius" required placeholder="Delivery radius" />
-                    <input name="support" required placeholder="Support number" />
-                    <input name="address" required placeholder="Address" />
-                    <button class="btn btn-primary" type="submit">Save settings</button>
-                  </form>
-                </article>
-                <article class="simple-box">
-                  <h3 style="margin-top:0">Data export</h3>
-                  <button id="exportDataBtn" class="btn btn-soft" type="button">Export JSON</button>
-                  <pre id="exportBox" style="white-space:pre-wrap;font-size:.82rem;max-height:260px;overflow:auto"></pre>
-                </article>
-              </div>
-            </div>
-          </article>
-        </section>
-      </div>
+        <article id="orderSection" class="card">
+          <h2 style="margin-top:0">Place order (quick)</h2>
+          <form id="orderForm" style="display:grid;gap:8px">
+            <input name="name" required placeholder="Your name" />
+            <input name="phone" required placeholder="Phone number" />
+            <select name="orderType" id="orderTypeSelect" required>
+              <option value="dine_in">Dine-in</option>
+              <option value="pickup">Pickup</option>
+              <option value="delivery">Delivery</option>
+            </select>
+            <input name="timeSlot" type="time" required />
+            <input id="locationInput" name="locationDetail" placeholder="Table no / Address" required />
+            <textarea name="notes" rows="2" placeholder="Optional note"></textarea>
+            <button id="placeOrderBtn" class="btn btn-primary" type="submit" disabled>Place order</button>
+            <div id="orderStatus" class="status"></div>
+          </form>
+        </article>
+      </section>
     </main>
 
-    <div class="mobile-cart-bar" id="mobileCartBar">
-      <span id="mobileCartText">0 items · $0.00</span>
-      <a class="btn btn-primary" href="#orderForm">Checkout</a>
+    <div class="mobile-bar">
+      <span id="mobileSummary">0 items · ₹0</span>
+      <a class="btn btn-primary" href="#orderSection">Checkout</a>
     </div>
-    <nav class="mobile-nav">
-      <div class="row" style="width:100%">
-        <a href="#menuSection">Menu</a>
-        <a href="#orderForm">Checkout</a>
-        <a href="#qrSection">QR</a>
-        <a href="#reservationForm">Reserve</a>
-      </div>
-    </nav>
 
     <script>
-      const DEFAULT_MENU = [
-        { id: 1, name: "Paneer Tikka", category: "Starters", price: 9.99, desc: "Char-grilled paneer with mint chutney." },
-        { id: 2, name: "Butter Chicken", category: "Main Course", price: 14.5, desc: "Creamy tomato gravy with tender chicken." },
-        { id: 3, name: "Veg Biryani", category: "Rice & Biryani", price: 12.25, desc: "Fragrant basmati rice and vegetables." },
-        { id: 4, name: "Garlic Naan", category: "Breads", price: 3.99, desc: "Tandoor naan with garlic butter." },
-        { id: 5, name: "Mango Lassi", category: "Beverages", price: 4.75, desc: "Yogurt smoothie with mango pulp." }
+      const MENU = [
+        { id: 1, name: "Paneer Tikka", category: "Starters", price: 249, emoji: "🧀" },
+        { id: 2, name: "Butter Chicken", category: "Main Course", price: 359, emoji: "🍗" },
+        { id: 3, name: "Veg Biryani", category: "Rice", price: 279, emoji: "🍚" },
+        { id: 4, name: "Garlic Naan", category: "Breads", price: 69, emoji: "🫓" },
+        { id: 5, name: "Masala Dosa", category: "South Indian", price: 189, emoji: "🥞" },
+        { id: 6, name: "Mango Lassi", category: "Drinks", price: 119, emoji: "🥭" }
       ];
 
-      const DEFAULT_SETTINGS = {
-        name: "Apna Restaurant",
-        hours: "11:00 AM - 11:00 PM",
-        radius: "8 km",
-        support: "+1 (555) 019-2026",
-        address: "245 Main Street, Downtown, NY 10001"
-      };
+      const cart = new Map();
+      const TAX_RATE = 0.05;
 
-      const ADMIN_PASS = "admin123";
-      const TAX_RATE = 0.08;
-      const SERVICE_FEE = 1.99;
-
-      const KEY_MENU = "apna-menu-items";
-      const KEY_CART = "apna-cart";
-      const KEY_ORDERS = "apna-orders";
-      const KEY_COUPONS = "apna-coupons";
-      const KEY_RESERVATIONS = "apna-reservations";
-      const KEY_SETTINGS = "apna-settings";
-
-      const menu = JSON.parse(localStorage.getItem(KEY_MENU) || JSON.stringify(DEFAULT_MENU));
-      const cart = new Map(JSON.parse(localStorage.getItem(KEY_CART) || "[]"));
-      const orders = JSON.parse(localStorage.getItem(KEY_ORDERS) || "[]");
-      const coupons = JSON.parse(localStorage.getItem(KEY_COUPONS) || JSON.stringify([{ code: "WELCOME10", type: "percent", value: 10, minOrder: 0 }]));
-      const reservations = JSON.parse(localStorage.getItem(KEY_RESERVATIONS) || "[]");
-      const settings = JSON.parse(localStorage.getItem(KEY_SETTINGS) || JSON.stringify(DEFAULT_SETTINGS));
-      let activeCoupon = null;
-
+      const money = (v) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(v);
       const $ = (id) => document.getElementById(id);
-      const money = (v) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(v);
-
-      function persist() {
-        localStorage.setItem(KEY_MENU, JSON.stringify(menu));
-        localStorage.setItem(KEY_CART, JSON.stringify([...cart.entries()]));
-        localStorage.setItem(KEY_ORDERS, JSON.stringify(orders));
-        localStorage.setItem(KEY_COUPONS, JSON.stringify(coupons));
-        localStorage.setItem(KEY_RESERVATIONS, JSON.stringify(reservations));
-        localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
-      }
-
-      function applySettingsToUI() {
-        $("kitchenHours").textContent = settings.hours;
-        $("radiusInfo").textContent = settings.radius;
-        $("supportInfo").textContent = settings.support;
-        $("addressInfo").textContent = settings.address;
-      }
-
-      function setView(mode) {
-        const customer = mode === "customer";
-        $("customerView").classList.toggle("hidden", !customer);
-        $("adminView").classList.toggle("hidden", customer);
-        $("customerBtn").classList.toggle("active", customer);
-        $("adminBtn").classList.toggle("active", !customer);
-      }
-
-      function setTab(tabName) {
-        ["ops", "menu", "discounts", "settings"].forEach((name) => {
-          $(`tab${name[0].toUpperCase()}${name.slice(1)}`).classList.toggle("hidden", name !== tabName);
-          document.querySelector(`[data-tab='${name}']`).classList.toggle("active", name === tabName);
-        });
-        if ($("adminTabSelect")) $("adminTabSelect").value = tabName;
-      }
 
       function buildCategories() {
-        $("categoryFilter").innerHTML = '<option value="all">All categories</option>';
-        [...new Set(menu.map((x) => x.category))].forEach((cat) => {
-          const o = document.createElement("option");
-          o.value = cat;
-          o.textContent = cat;
-          $("categoryFilter").append(o);
+        const categories = [...new Set(MENU.map((m) => m.category))];
+        categories.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat;
+          opt.textContent = cat;
+          $("categoryFilter").append(opt);
         });
-        renderQuickChips();
-      }
 
-      function renderQuickChips() {
         $("quickChips").innerHTML = "";
-        const all = document.createElement("button");
-        all.type = "button";
-        all.textContent = "All";
-        all.className = "btn";
-        all.dataset.category = "all";
-        $("quickChips").append(all);
-
-        [...new Set(menu.map((x) => x.category))].forEach((cat) => {
+        ["all", ...categories].forEach((cat) => {
           const b = document.createElement("button");
           b.type = "button";
-          b.textContent = cat;
-          b.className = "btn";
-          b.dataset.category = cat;
-          $("quickChips").append(b);
-        });
-
-        $("quickChips").querySelectorAll("button[data-category]").forEach((b) => {
+          b.textContent = cat === "all" ? "All" : cat;
           b.addEventListener("click", () => {
-            $("categoryFilter").value = b.dataset.category;
+            $("categoryFilter").value = cat;
             renderMenu();
           });
+          $("quickChips").append(b);
         });
       }
 
       function filteredMenu() {
         const q = $("searchInput").value.trim().toLowerCase();
-        const c = $("categoryFilter").value;
-        return menu.filter((item) => {
-          const byCategory = c === "all" || item.category === c;
-          const hay = `${item.name} ${item.desc} ${item.category}`.toLowerCase();
-          return byCategory && (!q || hay.includes(q));
+        const cat = $("categoryFilter").value;
+        return MENU.filter((m) => {
+          const byCat = cat === "all" || m.category === cat;
+          const byQ = !q || `${m.name} ${m.category}`.toLowerCase().includes(q);
+          return byCat && byQ;
         });
       }
 
-      function addToCart(id) { cart.set(id, (cart.get(id) || 0) + 1); persist(); renderMenu(); renderCart(); }
-      function changeQty(id, delta) {
-        const next = (cart.get(id) || 0) + delta;
-        if (next <= 0) cart.delete(id); else cart.set(id, next);
-        persist(); renderMenu(); renderCart();
+      function addToCart(id) {
+        cart.set(id, (cart.get(id) || 0) + 1);
+        renderMenu();
+        renderCart();
       }
 
-      function computeDiscount(subtotal) {
-        if (!activeCoupon || subtotal <= 0) return 0;
-        if ((activeCoupon.minOrder || 0) > subtotal) return 0;
-        if (activeCoupon.type === "percent") return Math.min(subtotal, subtotal * activeCoupon.value / 100);
-        return Math.min(subtotal, activeCoupon.value);
+      function changeQty(id, delta) {
+        const next = (cart.get(id) || 0) + delta;
+        if (next <= 0) cart.delete(id);
+        else cart.set(id, next);
+        renderMenu();
+        renderCart();
       }
 
       function renderMenu() {
-        const list = filteredMenu();
+        const items = filteredMenu();
         $("menuGrid").innerHTML = "";
-        if (!list.length) {
-          $("menuGrid").innerHTML = '<p class="muted">No menu items found.</p>';
+        if (!items.length) {
+          $("menuGrid").innerHTML = '<p class="muted">No matching items found.</p>';
           return;
         }
 
-        list.forEach((item) => {
+        items.forEach((item) => {
           const qty = cart.get(item.id) || 0;
-          const n = document.createElement("article");
-          n.className = "menu-item";
-          n.innerHTML = `
-            <span class="pill">${item.category}</span>
-            <div class="row"><strong>${item.name}</strong><strong>${money(item.price)}</strong></div>
-            <div class="muted">${item.desc || ""}</div>
+          const node = document.createElement("article");
+          node.className = "menu-item";
+          node.innerHTML = `
+            <div class="row"><strong>${item.emoji} ${item.name}</strong><strong>${money(item.price)}</strong></div>
+            <div class="muted">${item.category}</div>
             <div class="row">
               <button class="btn btn-soft" data-id="${item.id}" type="button">Add</button>
               <span class="muted">${qty ? `In cart: ${qty}` : ""}</span>
             </div>
           `;
-          $("menuGrid").append(n);
+          $("menuGrid").append(node);
         });
 
         $("menuGrid").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => addToCart(Number(b.dataset.id))));
@@ -525,22 +248,26 @@
       function renderCart() {
         $("cartList").innerHTML = "";
         if (!cart.size) {
-          $("cartList").innerHTML = '<p class="muted">Your cart is empty.</p>';
-          $("cartCount").textContent = "0 items";
-          $("orderBtn").disabled = true;
-          ["subTotal","discountLine","taxLine","serviceLine","grandLine","payableTotal"].forEach((id) => $(id).textContent = money(0));
-          $("mobileCartText").textContent = `0 items · ${money(0)}`;
+          $("cartList").innerHTML = '<p class="muted">Cart is empty. Add your favorite food.</p>';
+          $("itemCount").textContent = "0 items";
+          $("placeOrderBtn").disabled = true;
+          $("subTotal").textContent = money(0);
+          $("taxTotal").textContent = money(0);
+          $("finalTotal").textContent = money(0);
+          $("grandTotal").textContent = money(0);
+          $("mobileSummary").textContent = `0 items · ${money(0)}`;
           return;
         }
 
         let subtotal = 0;
-        let qtyTotal = 0;
+        let totalItems = 0;
+
         for (const [id, qty] of cart.entries()) {
-          const item = menu.find((x) => x.id === id);
-          if (!item) continue;
+          const item = MENU.find((m) => m.id === id);
           const line = item.price * qty;
           subtotal += line;
-          qtyTotal += qty;
+          totalItems += qty;
+
           const row = document.createElement("div");
           row.className = "cart-row";
           row.innerHTML = `
@@ -557,371 +284,79 @@
 
         $("cartList").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => changeQty(Number(b.dataset.id), b.dataset.act === "plus" ? 1 : -1)));
 
-        const discount = computeDiscount(subtotal);
-        const taxedBase = Math.max(0, subtotal - discount);
-        const tax = taxedBase * TAX_RATE;
-        const service = taxedBase > 0 ? SERVICE_FEE : 0;
-        const grand = taxedBase + tax + service;
+        const tax = subtotal * TAX_RATE;
+        const total = subtotal + tax;
 
-        $("cartCount").textContent = `${qtyTotal} item${qtyTotal > 1 ? "s" : ""}`;
+        $("itemCount").textContent = `${totalItems} item${totalItems > 1 ? "s" : ""}`;
         $("subTotal").textContent = money(subtotal);
-        $("discountLine").textContent = `-${money(discount)}`;
-        $("taxLine").textContent = money(tax);
-        $("serviceLine").textContent = money(service);
-        $("grandLine").textContent = money(grand);
-        $("payableTotal").textContent = money(grand);
-        $("mobileCartText").textContent = `${qtyTotal} item${qtyTotal > 1 ? "s" : ""} · ${money(grand)}`;
-        $("orderBtn").disabled = false;
+        $("taxTotal").textContent = money(tax);
+        $("finalTotal").textContent = money(total);
+        $("grandTotal").textContent = money(total);
+        $("mobileSummary").textContent = `${totalItems} item${totalItems > 1 ? "s" : ""} · ${money(total)}`;
+        $("placeOrderBtn").disabled = false;
       }
 
-      function renderOrders() {
-        $("ordersList").innerHTML = "";
-        if (!orders.length) {
-          $("ordersList").innerHTML = '<p class="muted">No orders yet.</p>';
-          return;
-        }
-
-        orders.slice().reverse().forEach((o) => {
-          const n = document.createElement("article");
-          n.className = "order-item";
-          n.innerHTML = `
-            <div class="row"><strong>#${o.orderNo}</strong><span class="pill">${o.status || "placed"}</span></div>
-            <div>${o.name} · ${o.phone}</div>
-            <div class="muted">${o.orderType} · ${o.locationDetail || ""}</div>
-            <div class="muted">Items: ${o.items.map((i) => `${i.name} x${i.qty}`).join(", ")}</div>
-            <div class="muted">Coupon: ${o.couponCode || "None"}</div>
-            <div class="row"><strong>${money(o.total)}</strong><span class="muted">${o.createdAt}</span></div>
-            <div class="row" style="justify-content:flex-start">
-              <select data-order-id="${o.orderNo}" class="statusSelect">
-                <option value="placed" ${o.status === "placed" ? "selected" : ""}>Placed</option>
-                <option value="preparing" ${o.status === "preparing" ? "selected" : ""}>Preparing</option>
-                <option value="ready" ${o.status === "ready" ? "selected" : ""}>Ready</option>
-                <option value="completed" ${o.status === "completed" ? "selected" : ""}>Completed</option>
-              </select>
-            </div>
-          `;
-          $("ordersList").append(n);
-        });
-
-        document.querySelectorAll(".statusSelect").forEach((s) => {
-          s.addEventListener("change", () => {
-            const id = Number(s.dataset.orderId);
-            const order = orders.find((x) => x.orderNo === id);
-            if (!order) return;
-            order.status = s.value;
-            persist();
-            renderOrders();
-            renderMetrics();
-          });
-        });
-      }
-
-      function renderReservations() {
-        $("reservationList").innerHTML = "";
-        if (!reservations.length) {
-          $("reservationList").innerHTML = '<p class="muted">No reservations yet.</p>';
-          return;
-        }
-        reservations.slice().reverse().forEach((r) => {
-          const n = document.createElement("article");
-          n.className = "order-item";
-          n.innerHTML = `<div><strong>${r.name}</strong> · ${r.phone}</div><div class="muted">${r.date} ${r.time} · ${r.guests} guest(s)</div><div class="muted">Booked at ${r.createdAt}</div>`;
-          $("reservationList").append(n);
-        });
-      }
-
-      function renderCoupons() {
-        $("couponList").innerHTML = "";
-        if (!coupons.length) {
-          $("couponList").innerHTML = '<p class="muted">No coupons configured.</p>';
-          return;
-        }
-        coupons.forEach((c) => {
-          const n = document.createElement("article");
-          n.className = "order-item";
-          n.innerHTML = `<div class="row"><strong>${c.code}</strong><span class="pill">${c.type === "percent" ? `${c.value}%` : money(c.value)}</span></div><div class="muted">Min order: ${money(c.minOrder || 0)}</div>`;
-          $("couponList").append(n);
-        });
-      }
-
-      function renderMenuList() {
-        $("menuList").innerHTML = "";
-        menu.forEach((m) => {
-          const n = document.createElement("div");
-          n.className = "order-item";
-          n.innerHTML = `<div class="row"><strong>${m.name}</strong><span class="pill">${m.category}</span></div><div class="muted">${money(m.price)}</div>`;
-          $("menuList").append(n);
-        });
-      }
-
-      function renderMetrics() {
-        $("metricOrders").textContent = String(orders.length);
-        $("metricRevenue").textContent = money(orders.reduce((a, b) => a + (b.total || 0), 0));
-        $("metricReservations").textContent = String(reservations.length);
-        $("metricMenu").textContent = String(menu.length);
+      function updateLocationPlaceholder() {
+        const type = $("orderTypeSelect").value;
+        if (type === "dine_in") $("locationInput").placeholder = "Table number";
+        else if (type === "pickup") $("locationInput").placeholder = "Pickup at counter";
+        else $("locationInput").placeholder = "Delivery address";
       }
 
       function generateQr(url) {
-        $("menuQr").src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+        $("menuQr").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(url)}`;
       }
 
-      function updateOrderLocationLabel() {
-        const mode = $("orderTypeSelect").value;
-        if (mode === "dine_in") {
-          $("locationLabel").firstChild.textContent = "Table Number";
-          $("locationInput").placeholder = "Table 6";
-        } else if (mode === "pickup") {
-          $("locationLabel").firstChild.textContent = "Pickup time";
-          $("locationInput").placeholder = "7:30 PM";
-        } else {
-          $("locationLabel").firstChild.textContent = "Delivery address";
-          $("locationInput").placeholder = "Street, apartment, landmark";
-        }
-      }
-
-      $("customerBtn").addEventListener("click", () => setView("customer"));
-      $("adminBtn").addEventListener("click", () => setView("admin"));
       $("searchInput").addEventListener("input", renderMenu);
       $("categoryFilter").addEventListener("change", renderMenu);
-      $("orderTypeSelect").addEventListener("change", updateOrderLocationLabel);
-
-      document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => setTab(b.dataset.tab)));
-      $("adminTabSelect").addEventListener("change", () => setTab($("adminTabSelect").value));
-
-      $("applyCouponBtn").addEventListener("click", () => {
-        $("couponStatus").className = "status";
-        const code = $("couponInput").value.trim().toUpperCase();
-        const found = coupons.find((c) => c.code.toUpperCase() === code);
-        if (!found) {
-          activeCoupon = null;
-          $("couponStatus").textContent = "Coupon not found.";
-          $("couponStatus").classList.add("error");
-          renderCart();
-          return;
-        }
-        const subtotal = [...cart.entries()].reduce((acc, [id, qty]) => {
-          const item = menu.find((m) => m.id === id);
-          return acc + ((item?.price || 0) * qty);
-        }, 0);
-        if ((found.minOrder || 0) > subtotal) {
-          activeCoupon = null;
-          $("couponStatus").textContent = `Coupon requires minimum order ${money(found.minOrder)}.`;
-          $("couponStatus").classList.add("warn");
-          renderCart();
-          return;
-        }
-        activeCoupon = found;
-        $("couponStatus").textContent = `Applied ${found.code}.`;
-        $("couponStatus").classList.add("ok");
-        renderCart();
-      });
-
-      $("clearCouponBtn").addEventListener("click", () => {
-        activeCoupon = null;
-        $("couponInput").value = "";
-        $("couponStatus").textContent = "Coupon removed.";
-        $("couponStatus").className = "status ok";
-        renderCart();
-      });
+      $("orderTypeSelect").addEventListener("change", updateLocationPlaceholder);
 
       $("orderForm").addEventListener("submit", (event) => {
         event.preventDefault();
         $("orderStatus").className = "status";
         if (!cart.size) {
-          $("orderStatus").textContent = "Add at least one item before ordering.";
+          $("orderStatus").textContent = "Please add at least one item.";
           $("orderStatus").classList.add("error");
           return;
         }
-        const fd = new FormData($("orderForm"));
-        const items = [...cart.entries()].map(([id, qty]) => {
-          const dish = menu.find((m) => m.id === id);
-          return { id, name: dish?.name || "Unknown", qty, unitPrice: dish?.price || 0 };
-        });
-        const subtotal = items.reduce((acc, i) => acc + i.qty * i.unitPrice, 0);
-        const discount = computeDiscount(subtotal);
-        const taxedBase = Math.max(0, subtotal - discount);
-        const tax = taxedBase * TAX_RATE;
-        const service = taxedBase > 0 ? SERVICE_FEE : 0;
-        const total = taxedBase + tax + service;
 
+        const data = new FormData($("orderForm"));
         const orderNo = Math.floor(1000 + Math.random() * 9000);
-        orders.push({
+        console.log("Order payload:", {
           orderNo,
-          orderType: fd.get("orderType"),
-          name: fd.get("name"),
-          phone: fd.get("phone"),
-          locationDetail: fd.get("locationDetail"),
-          notes: fd.get("notes"),
-          items,
-          subtotal,
-          discount,
-          tax,
-          service,
-          total,
-          couponCode: activeCoupon?.code || "",
-          status: "placed",
-          createdAt: new Date().toLocaleString()
+          name: data.get("name"),
+          phone: data.get("phone"),
+          orderType: data.get("orderType"),
+          timeSlot: data.get("timeSlot"),
+          locationDetail: data.get("locationDetail"),
+          notes: data.get("notes"),
+          items: [...cart.entries()]
         });
-        persist();
-        renderOrders();
-        renderMetrics();
 
-        $("orderStatus").textContent = `Order #${orderNo} confirmed.`;
+        $("orderStatus").textContent = `✅ Order #${orderNo} placed successfully.`;
         $("orderStatus").classList.add("ok");
         cart.clear();
-        activeCoupon = null;
-        $("couponInput").value = "";
-        $("couponStatus").textContent = "";
-        persist();
         renderMenu();
         renderCart();
         $("orderForm").reset();
-        updateOrderLocationLabel();
-      });
-
-      $("reservationForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const fd = new FormData($("reservationForm"));
-        reservations.push({
-          name: fd.get("name"),
-          phone: fd.get("phone"),
-          date: fd.get("date"),
-          time: fd.get("time"),
-          guests: Number(fd.get("guests")),
-          createdAt: new Date().toLocaleString()
-        });
-        persist();
-        renderReservations();
-        renderMetrics();
-        $("reservationStatus").textContent = "Reservation confirmed.";
-        $("reservationStatus").className = "status ok";
-        $("reservationForm").reset();
+        updateLocationPlaceholder();
       });
 
       $("generateQrBtn").addEventListener("click", () => {
         const url = $("qrUrlInput").value.trim();
-        if (!url) {
-          $("orderStatus").textContent = "Enter a valid URL for QR.";
-          $("orderStatus").className = "status error";
-          return;
-        }
+        if (!url) return;
         generateQr(url);
         $("openMenuLink").href = url;
-      });
-
-      $("unlockAdminBtn").addEventListener("click", () => {
-        $("adminStatus").className = "status";
-        if ($("adminPassInput").value !== ADMIN_PASS) {
-          $("adminStatus").textContent = "Incorrect passcode.";
-          $("adminStatus").classList.add("error");
-          return;
-        }
-        $("adminGate").classList.add("hidden");
-        $("adminContent").classList.remove("hidden");
-        $("adminStatus").textContent = "";
-      });
-
-      $("menuItemForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const fd = new FormData($("menuItemForm"));
-        const item = {
-          id: Math.max(0, ...menu.map((x) => x.id)) + 1,
-          name: String(fd.get("name") || "").trim(),
-          category: String(fd.get("category") || "").trim(),
-          price: Number(fd.get("price")),
-          desc: String(fd.get("desc") || "").trim()
-        };
-        if (!item.name || !item.category || Number.isNaN(item.price)) return;
-        menu.push(item);
-        persist();
-        buildCategories();
-        renderMenu();
-        renderMenuList();
-        renderMetrics();
-        $("menuItemForm").reset();
-      });
-
-      $("resetMenuBtn").addEventListener("click", () => {
-        menu.splice(0, menu.length, ...DEFAULT_MENU);
-        persist();
-        buildCategories();
-        renderMenu();
-        renderMenuList();
-        renderMetrics();
-      });
-
-      $("couponForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const fd = new FormData($("couponForm"));
-        const code = String(fd.get("code") || "").trim().toUpperCase();
-        const type = String(fd.get("type") || "percent");
-        const value = Number(fd.get("value"));
-        const minOrder = Number(fd.get("minOrder") || 0);
-        if (!code || Number.isNaN(value) || value < 0 || Number.isNaN(minOrder) || minOrder < 0) return;
-
-        const existing = coupons.find((c) => c.code.toUpperCase() === code);
-        if (existing) {
-          existing.type = type;
-          existing.value = value;
-          existing.minOrder = minOrder;
-        } else {
-          coupons.push({ code, type, value, minOrder });
-        }
-        persist();
-        renderCoupons();
-        $("couponForm").reset();
-      });
-
-      $("settingsForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const fd = new FormData($("settingsForm"));
-        settings.name = String(fd.get("name") || "").trim() || settings.name;
-        settings.hours = String(fd.get("hours") || "").trim() || settings.hours;
-        settings.radius = String(fd.get("radius") || "").trim() || settings.radius;
-        settings.support = String(fd.get("support") || "").trim() || settings.support;
-        settings.address = String(fd.get("address") || "").trim() || settings.address;
-        persist();
-        applySettingsToUI();
-      });
-
-      $("clearOrdersBtn").addEventListener("click", () => { orders.splice(0, orders.length); persist(); renderOrders(); renderMetrics(); });
-      $("clearReservationsBtn").addEventListener("click", () => { reservations.splice(0, reservations.length); persist(); renderReservations(); renderMetrics(); });
-      $("clearCouponsBtn").addEventListener("click", () => { coupons.splice(0, coupons.length); activeCoupon = null; persist(); renderCoupons(); renderCart(); });
-
-      $("exportDataBtn").addEventListener("click", () => {
-        const dump = {
-          settings,
-          menu,
-          coupons,
-          orders,
-          reservations,
-          exportedAt: new Date().toISOString()
-        };
-        $("exportBox").textContent = JSON.stringify(dump, null, 2);
       });
 
       const defaultUrl = `${window.location.origin}${window.location.pathname}#menuSection`;
       $("qrUrlInput").value = defaultUrl;
       $("openMenuLink").href = defaultUrl;
 
-      ["name","hours","radius","support","address"].forEach((field) => {
-        const form = $("settingsForm");
-        if (form && form.elements[field]) form.elements[field].value = settings[field];
-      });
-
-      setView("customer");
-      setTab("ops");
-      if (window.matchMedia("(max-width: 980px)").matches) $("adminTabSelectWrap").classList.remove("hidden");
-      applySettingsToUI();
       buildCategories();
       renderMenu();
       renderCart();
-      renderOrders();
-      renderReservations();
-      renderCoupons();
-      renderMenuList();
-      renderMetrics();
-      updateOrderLocationLabel();
+      updateLocationPlaceholder();
       generateQr(defaultUrl);
     </script>
   </body>
