@@ -54,6 +54,7 @@
       input, select, textarea { width: 100%; border: 1px solid #e6c7a7; border-radius: 10px; padding: 10px; font: inherit; min-height: 42px; }
       .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
       .menu-item { border: 1px solid #f2d9c2; border-radius: 10px; background: #fffdfa; padding: 10px; display: grid; gap: 8px; }
+      .emoji-pill { font-size: 1.2rem; background: #fff2e6; width: fit-content; border-radius: 999px; padding: 4px 10px; }
       .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
       .btn { border: 0; border-radius: 999px; padding: 9px 12px; font-weight: 700; cursor: pointer; }
       .btn-primary { background: var(--brand); color: #fff; }
@@ -160,11 +161,18 @@
     <script>
       const MENU = [
         { id: 1, name: "Paneer Tikka", category: "Starters", price: 249, emoji: "🧀" },
-        { id: 2, name: "Butter Chicken", category: "Main Course", price: 359, emoji: "🍗" },
-        { id: 3, name: "Veg Biryani", category: "Rice", price: 279, emoji: "🍚" },
-        { id: 4, name: "Garlic Naan", category: "Breads", price: 69, emoji: "🫓" },
-        { id: 5, name: "Masala Dosa", category: "South Indian", price: 189, emoji: "🥞" },
-        { id: 6, name: "Mango Lassi", category: "Drinks", price: 119, emoji: "🥭" }
+        { id: 2, name: "Tandoori Mushroom", category: "Starters", price: 229, emoji: "🍄" },
+        { id: 3, name: "Butter Chicken", category: "Main Course", price: 359, emoji: "🍗" },
+        { id: 4, name: "Dal Makhani", category: "Main Course", price: 269, emoji: "🥘" },
+        { id: 5, name: "Veg Biryani", category: "Rice", price: 279, emoji: "🍚" },
+        { id: 6, name: "Chicken Biryani", category: "Rice", price: 339, emoji: "🍛" },
+        { id: 7, name: "Garlic Naan", category: "Breads", price: 69, emoji: "🫓" },
+        { id: 8, name: "Butter Roti", category: "Breads", price: 49, emoji: "🥙" },
+        { id: 9, name: "Masala Dosa", category: "South Indian", price: 189, emoji: "🥞" },
+        { id: 10, name: "Idli Sambar", category: "South Indian", price: 149, emoji: "🍽️" },
+        { id: 11, name: "Mango Lassi", category: "Drinks", price: 119, emoji: "🥭" },
+        { id: 12, name: "Masala Chai", category: "Drinks", price: 49, emoji: "☕" },
+        { id: 13, name: "Gulab Jamun", category: "Desserts", price: 99, emoji: "🍮" }
       ];
 
       const cart = new Map();
@@ -232,7 +240,8 @@
           const node = document.createElement("article");
           node.className = "menu-item";
           node.innerHTML = `
-            <div class="row"><strong>${item.emoji} ${item.name}</strong><strong>${money(item.price)}</strong></div>
+            <span class="emoji-pill">${item.emoji}</span>
+            <div class="row"><strong>${item.name}</strong><strong>${money(item.price)}</strong></div>
             <div class="muted">${item.category}</div>
             <div class="row">
               <button class="btn btn-soft" data-id="${item.id}" type="button">Add</button>
