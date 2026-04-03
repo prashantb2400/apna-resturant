@@ -3,16 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apna Restaurant | Simple Digital Menu</title>
-    <meta name="description" content="Simple and user-friendly restaurant app with INR pricing, quick order flow, and QR menu." />
+    <title>Apna Restaurant | Easy Order</title>
+    <meta name="description" content="Super simple restaurant ordering app with INR pricing and easy navigation." />
     <style>
       :root {
         --bg: #fff9f2;
         --card: #fff;
         --brand: #e8590c;
-        --brand-dark: #c9470b;
-        --muted: #6b5a4d;
         --text: #2b1d14;
+        --muted: #6b5a4d;
       }
       * { box-sizing: border-box; }
       body {
@@ -21,195 +20,168 @@
         background: linear-gradient(180deg, #fff9f2 0%, #ffe8cc 100%);
         color: var(--text);
       }
-      .container { width: min(980px, 92vw); margin: 0 auto; }
+      .container { width: min(820px, 92vw); margin: 0 auto; }
       header {
         position: sticky; top: 0; z-index: 10;
-        background: rgba(255, 249, 242, 0.93);
+        background: rgba(255,249,242,.95);
         border-bottom: 1px solid #f3d7b8;
-        backdrop-filter: blur(4px);
       }
-      .nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
+      .header-inner { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; gap: 8px; }
+      .brand { font-weight: 800; display: flex; align-items: center; gap: 8px; }
+      .badge { width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; }
+      .top-nav { display: flex; gap: 6px; }
+      .top-nav a {
+        text-decoration: none;
+        background: #fff2e6;
+        color: #7a3f16;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-weight: 700;
+        font-size: .9rem;
       }
-      .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; }
-      .brand-badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--brand); }
       .card {
         background: var(--card);
         border-radius: 14px;
         box-shadow: 0 8px 20px rgba(0,0,0,.08);
         padding: 14px;
+        margin-top: 12px;
       }
-      .hero { margin-top: 14px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; }
-      .hero h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 2rem); }
+      h1, h2 { margin: 0 0 8px; }
       .muted { color: var(--muted); }
-      .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-      .chip { background: #fff2e6; color: #7a3f16; border-radius: 999px; padding: 6px 10px; font-size: .9rem; }
-      .section { margin-top: 12px; }
-      .search-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
-      .chips-scroll { display: flex; gap: 8px; overflow-x: auto; margin-top: 8px; padding-bottom: 2px; }
-      .chips-scroll button { border: 0; border-radius: 999px; background: #fff2e6; color: #7a3f16; padding: 8px 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
-      input, select, textarea { width: 100%; border: 1px solid #e6c7a7; border-radius: 10px; padding: 10px; font: inherit; min-height: 42px; }
-      .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-      .menu-item { border: 1px solid #f2d9c2; border-radius: 10px; background: #fffdfa; padding: 10px; display: grid; gap: 8px; }
-      .emoji-pill { font-size: 1.2rem; background: #fff2e6; width: fit-content; border-radius: 999px; padding: 4px 10px; }
-      .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .btn { border: 0; border-radius: 999px; padding: 9px 12px; font-weight: 700; cursor: pointer; }
+      .step { background: #fff2e6; border-radius: 10px; padding: 8px 10px; font-weight: 600; color: #7a3f16; margin-top: 8px; }
+      input, select, textarea, button {
+        width: 100%; min-height: 42px; border-radius: 10px; font: inherit;
+      }
+      input, select, textarea { border: 1px solid #e6c7a7; padding: 10px; }
+      button { border: 0; cursor: pointer; font-weight: 700; }
       .btn-primary { background: var(--brand); color: #fff; }
-      .btn-primary:hover { background: var(--brand-dark); }
       .btn-soft { background: #fff2e6; color: #7a3f16; }
-      .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+      .chips { display: flex; gap: 8px; overflow-x: auto; margin: 8px 0; }
+      .chips button { width: auto; border-radius: 999px; padding: 8px 12px; background: #fff2e6; color: #7a3f16; }
+      .menu-list { display: grid; gap: 8px; }
+      .menu-item { border: 1px solid #f2d9c2; border-radius: 10px; padding: 10px; display: grid; gap: 6px; background: #fffdfa; }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+      .add-btn { width: auto; border-radius: 999px; padding: 8px 12px; background: #fff2e6; color: #7a3f16; }
       .cart-list { display: grid; gap: 8px; }
-      .cart-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; border: 1px solid #f2d9c2; border-radius: 10px; padding: 8px; }
-      .tiny { width: 30px; height: 30px; border: 0; border-radius: 8px; background: #ffe8cc; cursor: pointer; }
-      .status { min-height: 1.2rem; font-weight: 700; margin-top: 4px; }
+      .cart-row { border: 1px solid #f2d9c2; border-radius: 10px; padding: 8px; display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; }
+      .tiny { width: 30px; min-height: 30px; border-radius: 8px; background: #ffe8cc; }
+      .status { min-height: 1.1rem; font-weight: 700; margin-top: 4px; }
       .ok { color: #2f9e44; }
       .error { color: #c92a2a; }
-      .mobile-bar {
-        position: fixed; left: 50%; transform: translateX(-50%); bottom: 10px; width: min(760px, 92vw);
-        background: #2b1d14; color: #fff; border-radius: 999px; padding: 8px 10px;
-        display: none; justify-content: space-between; align-items: center; z-index: 20;
+      .sticky-summary {
+        position: fixed; left: 50%; transform: translateX(-50%); bottom: 10px;
+        width: min(760px, 92vw); background: #2b1d14; color: #fff;
+        border-radius: 999px; padding: 8px 10px; display: flex;
+        justify-content: space-between; align-items: center; z-index: 12;
       }
-      @media (max-width: 860px) {
-        .hero, .layout { grid-template-columns: 1fr; }
-        .menu-grid { grid-template-columns: 1fr; }
-        .mobile-bar { display: flex; }
-        body { padding-bottom: 74px; }
-      }
+      .sticky-summary a { color: #fff; text-decoration: none; font-weight: 700; background: var(--brand); padding: 8px 12px; border-radius: 999px; }
+      body { padding-bottom: 74px; }
     </style>
   </head>
   <body>
     <header>
-      <div class="container nav">
-        <div class="brand"><span class="brand-badge">🍽️</span>Apna Restaurant</div>
-        <a class="btn btn-soft" href="#orderSection">Quick Order</a>
+      <div class="container header-inner">
+        <div class="brand"><span class="badge">🍽️</span>Apna Restaurant</div>
+        <nav class="top-nav">
+          <a href="#menu">1.Menu</a>
+          <a href="#cart">2.Cart</a>
+          <a href="#order">3.Order</a>
+        </nav>
       </div>
     </header>
 
     <main class="container">
-      <section class="hero">
-        <article class="card">
-          <h1>Simple menu and fast ordering</h1>
-          <p class="muted">Choose food, pick time, place order. That’s it.</p>
-          <div class="chip-row">
-            <span class="chip">⏰ Open: 11:00 AM - 11:00 PM</span>
-            <span class="chip">🚚 Delivery in 30-40 min</span>
-            <span class="chip">📞 +91 98765 43210</span>
-          </div>
-        </article>
-        <article class="card">
-          <h3 style="margin-top:0">Scan QR for Menu</h3>
-          <label>Menu URL<input id="qrUrlInput" type="url" /></label>
+      <section class="card">
+        <h1>Easy food ordering</h1>
+        <p class="muted">Simple steps: choose food, check total, place order.</p>
+        <div class="step">⏰ Open 11:00 AM - 11:00 PM · 🚚 Avg delivery 30-40 mins · 📞 +91 98765 43210</div>
+      </section>
+
+      <section id="menu" class="card">
+        <h2>1) Choose your food</h2>
+        <input id="searchInput" placeholder="Search food" />
+        <div id="categoryChips" class="chips"></div>
+        <div id="menuList" class="menu-list"></div>
+      </section>
+
+      <section id="cart" class="card">
+        <h2>2) Review your cart</h2>
+        <div id="cartList" class="cart-list"></div>
+        <div class="row" style="margin-top:8px"><span class="muted">Subtotal</span><strong id="subtotal">₹0</strong></div>
+        <div class="row"><span class="muted">GST (5%)</span><strong id="gst">₹0</strong></div>
+        <div class="row"><span>Total</span><strong id="total">₹0</strong></div>
+      </section>
+
+      <section id="order" class="card">
+        <h2>3) Place order</h2>
+        <form id="orderForm" style="display:grid;gap:8px">
+          <input name="name" required placeholder="Your name" />
+          <input name="phone" required placeholder="Phone" />
+          <select name="type" id="orderType">
+            <option value="dine-in">Dine-in</option>
+            <option value="pickup">Pickup</option>
+            <option value="delivery">Delivery</option>
+          </select>
+          <input name="time" type="time" required />
+          <input name="location" id="locationInput" required placeholder="Table number / address" />
+          <button id="placeBtn" class="btn-primary" type="submit" disabled>Place order</button>
+          <div id="orderStatus" class="status"></div>
+        </form>
+
+        <details style="margin-top:10px">
+          <summary><strong>QR menu link</strong></summary>
+          <label style="display:block;margin-top:8px">Menu URL<input id="qrUrlInput" type="url" /></label>
           <div class="row" style="margin-top:8px">
-            <button id="generateQrBtn" class="btn btn-soft" type="button">Generate QR</button>
-            <a id="openMenuLink" class="btn btn-primary" href="#menuSection">Open Menu</a>
+            <button id="qrBtn" class="btn-soft" type="button">Generate QR</button>
+            <a id="qrOpen" href="#menu" class="btn-soft" style="text-decoration:none;padding:10px 12px;border-radius:999px;">Open</a>
           </div>
-          <div style="text-align:center;margin-top:8px">
-            <img id="menuQr" width="150" height="150" alt="Menu QR" style="border:1px solid #f2d9c2;border-radius:10px;background:#fff" />
-          </div>
-        </article>
-      </section>
-
-      <section id="menuSection" class="section card">
-        <div class="row"><h2 style="margin:0">Menu</h2><span id="itemCount" class="chip">0 items</span></div>
-        <div class="search-row">
-          <input id="searchInput" placeholder="Search food (paneer, biryani...)" />
-          <select id="categoryFilter"><option value="all">All</option></select>
-        </div>
-        <div id="quickChips" class="chips-scroll"></div>
-        <div id="menuGrid" class="menu-grid"></div>
-      </section>
-
-      <section class="layout">
-        <article class="card">
-          <div class="row"><h2 style="margin:0">Cart</h2><strong id="grandTotal">₹0</strong></div>
-          <div id="cartList" class="cart-list" style="margin-top:8px"></div>
-          <div style="display:grid;gap:6px;margin-top:8px">
-            <div class="row"><span class="muted">Subtotal</span><span id="subTotal">₹0</span></div>
-            <div class="row"><span class="muted">GST (5%)</span><span id="taxTotal">₹0</span></div>
-            <div class="row"><strong>Total</strong><strong id="finalTotal">₹0</strong></div>
-          </div>
-        </article>
-
-        <article id="orderSection" class="card">
-          <h2 style="margin-top:0">Place order (quick)</h2>
-          <form id="orderForm" style="display:grid;gap:8px">
-            <input name="name" required placeholder="Your name" />
-            <input name="phone" required placeholder="Phone number" />
-            <select name="orderType" id="orderTypeSelect" required>
-              <option value="dine_in">Dine-in</option>
-              <option value="pickup">Pickup</option>
-              <option value="delivery">Delivery</option>
-            </select>
-            <input name="timeSlot" type="time" required />
-            <input id="locationInput" name="locationDetail" placeholder="Table no / Address" required />
-            <textarea name="notes" rows="2" placeholder="Optional note"></textarea>
-            <button id="placeOrderBtn" class="btn btn-primary" type="submit" disabled>Place order</button>
-            <div id="orderStatus" class="status"></div>
-          </form>
-        </article>
+          <div style="text-align:center;margin-top:8px"><img id="qrImg" alt="Menu QR" width="140" height="140" style="border:1px solid #f2d9c2;border-radius:10px;background:#fff" /></div>
+        </details>
       </section>
     </main>
 
-    <div class="mobile-bar">
-      <span id="mobileSummary">0 items · ₹0</span>
-      <a class="btn btn-primary" href="#orderSection">Checkout</a>
+    <div class="sticky-summary">
+      <span id="stickyText">0 items · ₹0</span>
+      <a href="#order">Checkout</a>
     </div>
 
     <script>
       const MENU = [
-        { id: 1, name: "Paneer Tikka", category: "Starters", price: 249, emoji: "🧀" },
-        { id: 2, name: "Tandoori Mushroom", category: "Starters", price: 229, emoji: "🍄" },
-        { id: 3, name: "Butter Chicken", category: "Main Course", price: 359, emoji: "🍗" },
-        { id: 4, name: "Dal Makhani", category: "Main Course", price: 269, emoji: "🥘" },
-        { id: 5, name: "Veg Biryani", category: "Rice", price: 279, emoji: "🍚" },
-        { id: 6, name: "Chicken Biryani", category: "Rice", price: 339, emoji: "🍛" },
-        { id: 7, name: "Garlic Naan", category: "Breads", price: 69, emoji: "🫓" },
-        { id: 8, name: "Butter Roti", category: "Breads", price: 49, emoji: "🥙" },
-        { id: 9, name: "Masala Dosa", category: "South Indian", price: 189, emoji: "🥞" },
-        { id: 10, name: "Idli Sambar", category: "South Indian", price: 149, emoji: "🍽️" },
-        { id: 11, name: "Mango Lassi", category: "Drinks", price: 119, emoji: "🥭" },
-        { id: 12, name: "Masala Chai", category: "Drinks", price: 49, emoji: "☕" },
-        { id: 13, name: "Gulab Jamun", category: "Desserts", price: 99, emoji: "🍮" }
+        { id: 1, name: "🧀 Paneer Tikka", category: "Starters", price: 249 },
+        { id: 2, name: "🍗 Butter Chicken", category: "Main", price: 359 },
+        { id: 3, name: "🍚 Veg Biryani", category: "Rice", price: 279 },
+        { id: 4, name: "🫓 Garlic Naan", category: "Bread", price: 69 },
+        { id: 5, name: "🥞 Masala Dosa", category: "South", price: 189 },
+        { id: 6, name: "☕ Masala Chai", category: "Drinks", price: 49 }
       ];
-
+      const TAX = 0.05;
       const cart = new Map();
-      const TAX_RATE = 0.05;
+      let selectedCategory = "all";
 
-      const money = (v) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(v);
       const $ = (id) => document.getElementById(id);
+      const money = (v) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(v);
 
-      function buildCategories() {
-        const categories = [...new Set(MENU.map((m) => m.category))];
+      function buildCategoryChips() {
+        const categories = ["all", ...new Set(MENU.map((m) => m.category))];
+        $("categoryChips").innerHTML = "";
         categories.forEach((cat) => {
-          const opt = document.createElement("option");
-          opt.value = cat;
-          opt.textContent = cat;
-          $("categoryFilter").append(opt);
-        });
-
-        $("quickChips").innerHTML = "";
-        ["all", ...categories].forEach((cat) => {
           const b = document.createElement("button");
           b.type = "button";
           b.textContent = cat === "all" ? "All" : cat;
           b.addEventListener("click", () => {
-            $("categoryFilter").value = cat;
+            selectedCategory = cat;
             renderMenu();
           });
-          $("quickChips").append(b);
+          $("categoryChips").append(b);
         });
       }
 
       function filteredMenu() {
         const q = $("searchInput").value.trim().toLowerCase();
-        const cat = $("categoryFilter").value;
-        return MENU.filter((m) => {
-          const byCat = cat === "all" || m.category === cat;
-          const byQ = !q || `${m.name} ${m.category}`.toLowerCase().includes(q);
-          return byCat && byQ;
+        return MENU.filter((item) => {
+          const catOK = selectedCategory === "all" || item.category === selectedCategory;
+          const qOK = !q || item.name.toLowerCase().includes(q);
+          return catOK && qOK;
         });
       }
 
@@ -229,58 +201,51 @@
 
       function renderMenu() {
         const items = filteredMenu();
-        $("menuGrid").innerHTML = "";
+        $("menuList").innerHTML = "";
         if (!items.length) {
-          $("menuGrid").innerHTML = '<p class="muted">No matching items found.</p>';
+          $("menuList").innerHTML = '<p class="muted">No food found.</p>';
           return;
         }
-
         items.forEach((item) => {
           const qty = cart.get(item.id) || 0;
-          const node = document.createElement("article");
-          node.className = "menu-item";
-          node.innerHTML = `
-            <span class="emoji-pill">${item.emoji}</span>
+          const card = document.createElement("div");
+          card.className = "menu-item";
+          card.innerHTML = `
             <div class="row"><strong>${item.name}</strong><strong>${money(item.price)}</strong></div>
-            <div class="muted">${item.category}</div>
             <div class="row">
-              <button class="btn btn-soft" data-id="${item.id}" type="button">Add</button>
-              <span class="muted">${qty ? `In cart: ${qty}` : ""}</span>
+              <span class="muted">${item.category}</span>
+              <button class="add-btn" data-id="${item.id}" type="button">Add</button>
             </div>
+            <div class="muted">${qty ? `In cart: ${qty}` : ""}</div>
           `;
-          $("menuGrid").append(node);
+          $("menuList").append(card);
         });
-
-        $("menuGrid").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => addToCart(Number(b.dataset.id))));
+        $("menuList").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => addToCart(Number(b.dataset.id))));
       }
 
       function renderCart() {
         $("cartList").innerHTML = "";
         if (!cart.size) {
-          $("cartList").innerHTML = '<p class="muted">Cart is empty. Add your favorite food.</p>';
-          $("itemCount").textContent = "0 items";
-          $("placeOrderBtn").disabled = true;
-          $("subTotal").textContent = money(0);
-          $("taxTotal").textContent = money(0);
-          $("finalTotal").textContent = money(0);
-          $("grandTotal").textContent = money(0);
-          $("mobileSummary").textContent = `0 items · ${money(0)}`;
+          $("cartList").innerHTML = '<p class="muted">Cart is empty.</p>';
+          $("subtotal").textContent = money(0);
+          $("gst").textContent = money(0);
+          $("total").textContent = money(0);
+          $("stickyText").textContent = `0 items · ${money(0)}`;
+          $("placeBtn").disabled = true;
           return;
         }
 
         let subtotal = 0;
-        let totalItems = 0;
-
+        let count = 0;
         for (const [id, qty] of cart.entries()) {
           const item = MENU.find((m) => m.id === id);
           const line = item.price * qty;
           subtotal += line;
-          totalItems += qty;
-
+          count += qty;
           const row = document.createElement("div");
           row.className = "cart-row";
           row.innerHTML = `
-            <div><strong>${item.name}</strong><div class="muted">${money(item.price)} each</div></div>
+            <div><strong>${item.name}</strong></div>
             <div>
               <button class="tiny" data-id="${id}" data-act="minus" type="button">-</button>
               <strong style="padding:0 6px">${qty}</strong>
@@ -293,56 +258,47 @@
 
         $("cartList").querySelectorAll("button[data-id]").forEach((b) => b.addEventListener("click", () => changeQty(Number(b.dataset.id), b.dataset.act === "plus" ? 1 : -1)));
 
-        const tax = subtotal * TAX_RATE;
-        const total = subtotal + tax;
-
-        $("itemCount").textContent = `${totalItems} item${totalItems > 1 ? "s" : ""}`;
-        $("subTotal").textContent = money(subtotal);
-        $("taxTotal").textContent = money(tax);
-        $("finalTotal").textContent = money(total);
-        $("grandTotal").textContent = money(total);
-        $("mobileSummary").textContent = `${totalItems} item${totalItems > 1 ? "s" : ""} · ${money(total)}`;
-        $("placeOrderBtn").disabled = false;
+        const gst = subtotal * TAX;
+        const total = subtotal + gst;
+        $("subtotal").textContent = money(subtotal);
+        $("gst").textContent = money(gst);
+        $("total").textContent = money(total);
+        $("stickyText").textContent = `${count} item${count > 1 ? "s" : ""} · ${money(total)}`;
+        $("placeBtn").disabled = false;
       }
 
       function updateLocationPlaceholder() {
-        const type = $("orderTypeSelect").value;
-        if (type === "dine_in") $("locationInput").placeholder = "Table number";
-        else if (type === "pickup") $("locationInput").placeholder = "Pickup at counter";
-        else $("locationInput").placeholder = "Delivery address";
+        const type = $("orderType").value;
+        $("locationInput").placeholder = type === "delivery" ? "Delivery address" : type === "pickup" ? "Pickup counter" : "Table number";
       }
 
       function generateQr(url) {
-        $("menuQr").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(url)}`;
+        $("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(url)}`;
       }
 
       $("searchInput").addEventListener("input", renderMenu);
-      $("categoryFilter").addEventListener("change", renderMenu);
-      $("orderTypeSelect").addEventListener("change", updateLocationPlaceholder);
+      $("orderType").addEventListener("change", updateLocationPlaceholder);
 
       $("orderForm").addEventListener("submit", (event) => {
         event.preventDefault();
         $("orderStatus").className = "status";
         if (!cart.size) {
-          $("orderStatus").textContent = "Please add at least one item.";
+          $("orderStatus").textContent = "Add food first.";
           $("orderStatus").classList.add("error");
           return;
         }
-
-        const data = new FormData($("orderForm"));
+        const fd = new FormData($("orderForm"));
         const orderNo = Math.floor(1000 + Math.random() * 9000);
-        console.log("Order payload:", {
+        console.log("Order", {
           orderNo,
-          name: data.get("name"),
-          phone: data.get("phone"),
-          orderType: data.get("orderType"),
-          timeSlot: data.get("timeSlot"),
-          locationDetail: data.get("locationDetail"),
-          notes: data.get("notes"),
+          name: fd.get("name"),
+          phone: fd.get("phone"),
+          type: fd.get("type"),
+          time: fd.get("time"),
+          location: fd.get("location"),
           items: [...cart.entries()]
         });
-
-        $("orderStatus").textContent = `✅ Order #${orderNo} placed successfully.`;
+        $("orderStatus").textContent = `Order #${orderNo} placed.`;
         $("orderStatus").classList.add("ok");
         cart.clear();
         renderMenu();
@@ -351,22 +307,22 @@
         updateLocationPlaceholder();
       });
 
-      $("generateQrBtn").addEventListener("click", () => {
+      $("qrBtn").addEventListener("click", () => {
         const url = $("qrUrlInput").value.trim();
         if (!url) return;
         generateQr(url);
-        $("openMenuLink").href = url;
+        $("qrOpen").href = url;
       });
 
-      const defaultUrl = `${window.location.origin}${window.location.pathname}#menuSection`;
+      const defaultUrl = `${window.location.origin}${window.location.pathname}#menu`;
       $("qrUrlInput").value = defaultUrl;
-      $("openMenuLink").href = defaultUrl;
+      $("qrOpen").href = defaultUrl;
+      generateQr(defaultUrl);
 
-      buildCategories();
+      buildCategoryChips();
       renderMenu();
       renderCart();
       updateLocationPlaceholder();
-      generateQr(defaultUrl);
     </script>
   </body>
 </html>
